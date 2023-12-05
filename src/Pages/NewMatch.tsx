@@ -35,7 +35,7 @@ enum ShootResult {
 const SelectPlayers = () => {
   // Utils
   const navigate = useNavigate();
-  const urlApi = "http://localhost:4110/api/v1";
+  const urlApi = "https://api-beta7m.fg-tech.fr/api/v1";
 
   // Variables
   const goalkeepers: Player[] = useSelector(
