@@ -9,32 +9,59 @@ import {
 import { useNavigate } from "react-router-dom";
 import { SportsHandball } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
-import Data from "../Data/players.json";
-
-interface Player {
-  id: string;
-  name: string;
-  position: string;
-  shoots: {
-    goals: number;
-    stops: number;
-  };
-  matchs: {
-    total: number;
-    wins: number;
-  };
-}
+import { useEffect } from "react";
+import { Match, Player, Shoot } from "../Types.js";
+import { useDispatch, useSelector } from "react-redux";
+import { setPlayers } from "../Store/Slices/playersSlice.js";
+import { RootState } from "../Store/Type.js";
 
 const Home = () => {
   // Utils
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const urlApi = "http://localhost:4110/api/v1";
 
   // Variables
-  const Players: Player[] = Data;
+  const players: Player[] = useSelector(
+    (state: RootState) => state.players.players
+  );
+
+  // UseEffect
+  useEffect(() => {
+    dataFetch();
+  }, []);
 
   // Methods
+  const dataFetch = async () => {
+    const response = await fetch(`${urlApi}/players/infos`);
+    const data = await response.json();
+    dispatch(setPlayers(data));
+  };
+
   const handleClickFab = (): void => {
     navigate("/SelectPlayers");
+  };
+
+  const getGoalsAndStops = (
+    shootList: Shoot[]
+  ): { goals: number; stops: number } => {
+    let goals = 0;
+    let stops = 0;
+    for (const shoot of shootList) {
+      shoot.is_Goal ? goals++ : stops++;
+    }
+    return { goals, stops };
+  };
+
+  const getVictoryCount = (
+    matchList: Match[]
+  ): { goalkeeperVictories: number; shooterVictories: number } => {
+    let shooterVictories = 0;
+    let goalkeeperVictories = 0;
+    for (const match of matchList) {
+      match.players_victory ? shooterVictories++ : goalkeeperVictories++;
+    }
+    return { shooterVictories, goalkeeperVictories };
   };
 
   return (
@@ -44,16 +71,17 @@ const Home = () => {
       </Typography>
 
       <Stack direction="row" justifyContent="center" flexWrap="wrap" gap={2}>
-        {Players.map(
+        {players.map(
           (player) =>
-            player.position === "Goalkeeper" && (
+            player.is_goalkeeper &&
+            !!player.goalkeeperList?.length && (
               <Card
                 key={uuidv4()}
                 sx={{ backgroundColor: "primary.main", color: "white" }}
               >
                 <CardContent>
                   <Typography variant="h6" textAlign={"center"}>
-                    {player.name.toUpperCase()}
+                    {player.first_name.toUpperCase()}
                   </Typography>
                   <Stack
                     direction="row"
@@ -65,12 +93,13 @@ const Home = () => {
                         Arrêts
                       </Typography>
                       <Typography variant="body1" textAlign={"center"}>
-                        {player.shoots.goals}
+                        {getGoalsAndStops(player.goalkeeperList!).stops} {" / "}{" "}
+                        {player.goalkeeperList!.length}
                       </Typography>
                       <Typography variant="body1" textAlign={"center"}>
                         {Math.round(
-                          (player.shoots.stops /
-                            (player.shoots.goals + player.shoots.stops)) *
+                          (getGoalsAndStops(player.goalkeeperList!).stops /
+                            player.goalkeeperList!.length) *
                             100
                         )}
                         {" %"}
@@ -81,11 +110,15 @@ const Home = () => {
                         Victoires
                       </Typography>
                       <Typography variant="body1" textAlign={"center"}>
-                        {player.matchs.wins}
+                        {getVictoryCount(player.matchList!).goalkeeperVictories}{" "}
+                        {" / "} {player.matchList!.length}
                       </Typography>
                       <Typography variant="body1" textAlign={"center"}>
                         {Math.round(
-                          (player.matchs.wins / player.matchs.total) * 100
+                          (getVictoryCount(player.matchList!)
+                            .goalkeeperVictories /
+                            player.matchList!.length) *
+                            100
                         )}
                         {" %"}
                       </Typography>
@@ -102,16 +135,17 @@ const Home = () => {
       </Typography>
 
       <Stack direction="row" justifyContent="center" flexWrap="wrap" gap={2}>
-        {Players.map(
+        {players.map(
           (player) =>
-            player.position === "Player" && (
+            !player.is_goalkeeper &&
+            !!player.shooterList?.length && (
               <Card
                 key={uuidv4()}
                 sx={{ backgroundColor: "primary.main", color: "white" }}
               >
                 <CardContent>
                   <Typography variant="h6" textAlign={"center"}>
-                    {player.name.toUpperCase()}
+                    {player.first_name.toUpperCase()}
                   </Typography>
                   <Stack
                     direction="row"
@@ -123,12 +157,13 @@ const Home = () => {
                         Buts
                       </Typography>
                       <Typography variant="body1" textAlign={"center"}>
-                        {player.shoots.goals}
+                        {getGoalsAndStops(player.shooterList!).goals} {" / "}{" "}
+                        {player.shooterList!.length}
                       </Typography>
                       <Typography variant="body1" textAlign={"center"}>
                         {Math.round(
-                          (player.shoots.goals /
-                            (player.shoots.goals + player.shoots.stops)) *
+                          (getGoalsAndStops(player.shooterList!).goals /
+                            player.shooterList!.length) *
                             100
                         )}
                         {" %"}
@@ -139,11 +174,14 @@ const Home = () => {
                         Victoires
                       </Typography>
                       <Typography variant="body1" textAlign={"center"}>
-                        {player.matchs.wins}
+                        {getVictoryCount(player.matchList!).shooterVictories}{" "}
+                        {" / "} {player.matchList!.length}
                       </Typography>
                       <Typography variant="body1" textAlign={"center"}>
                         {Math.round(
-                          (player.matchs.wins / player.matchs.total) * 100
+                          (getVictoryCount(player.matchList!).shooterVictories /
+                            player.shooterList!.length) *
+                            100
                         )}
                         {" %"}
                       </Typography>

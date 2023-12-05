@@ -10,24 +10,14 @@ import {
   Button,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { setGoalkeepers, setPlayers } from "../Store/Slices/selectPlayersSlice";
-import { useDispatch } from "react-redux";
+import {
+  setGoalkeepers,
+  setShooters,
+} from "../Store/Slices/selectMatchPlayersSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import Data from "../Data/players.json";
-
-interface Player {
-  id: string;
-  name: string;
-  position: string;
-  shoots: {
-    goals: number;
-    stops: number;
-  };
-  matchs: {
-    total: number;
-    wins: number;
-  };
-}
+import { RootState } from "../Store/Type";
+import { Player } from "../Types";
 
 const SelectPlayers = () => {
   // Utils
@@ -35,25 +25,25 @@ const SelectPlayers = () => {
   const dispatch = useDispatch();
 
   // Variables
-  const Players: Player[] = Data;
+  const Players: Player[] = useSelector((state: RootState) => state.players.players);
 
   // Methods
   const handleSubmitForm = (event: React.FormEvent): void => {
     event.preventDefault();
 
     const form: FormData = new FormData(event.currentTarget as HTMLFormElement);
-    const goalkeepersId: FormDataEntryValue[] = form.getAll("goalkeeper");
-    const playersId: FormDataEntryValue[] = form.getAll("player");
+    const goalkeepersId: string[] = form.getAll("goalkeeper") as any[];
+    const shootersId: string[] = form.getAll("player") as any[];
 
     const goalkeepers: Player[] = Players.filter((player) =>
-      goalkeepersId.includes(player.id)
+      goalkeepersId.includes(`${player.id!}`)
     );
-    const players: Player[] = Players.filter((player) =>
-      playersId.includes(player.id)
+    const shooters: Player[] = Players.filter((player) =>
+      shootersId.includes(`${player.id!}`)
     );
 
     dispatch(setGoalkeepers(goalkeepers));
-    dispatch(setPlayers(players));
+    dispatch(setShooters(shooters));
 
     navigate("/NewMatch");
   };
@@ -68,13 +58,13 @@ const SelectPlayers = () => {
           <FormLabel>Gardiens</FormLabel>
           {Players.map(
             (player) =>
-              player.position === "Goalkeeper" && (
+              player.is_goalkeeper && (
                 <FormControlLabel
                   key={uuidv4()}
                   name="goalkeeper"
                   control={<Checkbox />}
                   value={player.id}
-                  label={player.name}
+                  label={player.first_name}
                 />
               )
           )}
@@ -84,13 +74,13 @@ const SelectPlayers = () => {
           <FormLabel>Joueurs</FormLabel>
           {Players.map(
             (player) =>
-              player.position === "Player" && (
+              !player.is_goalkeeper && (
                 <FormControlLabel
                   key={uuidv4()}
                   name="player"
                   control={<Checkbox />}
                   value={player.id}
-                  label={player.name}
+                  label={player.first_name}
                 />
               )
           )}
