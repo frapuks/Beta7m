@@ -1,0 +1,9 @@
+version: '1'
+
+services:
+  beta7m:
+    container_name: "beta7m-react"
+    image: beta7m-react
+    ports:
+      - '6007:5173'
+    restart: always
