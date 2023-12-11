@@ -5,6 +5,7 @@ import {
   CardContent,
   Stack,
   Fab,
+  Divider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { SportsHandball } from "@mui/icons-material";
@@ -77,13 +78,17 @@ const Home = () => {
             player.is_goalkeeper &&
             !!player.goalkeeperList?.length && (
               <Card
-                key={uuidv4()}
+              key={uuidv4()}
                 sx={{ backgroundColor: "primary.main", color: "white" }}
-              >
+                >
                 <CardContent>
                   <Typography variant="h6" textAlign={"center"}>
-                    {player.first_name.toUpperCase()}
+                    {player.first_name}
                   </Typography>
+                  <Typography variant="h6" textAlign={"center"}>
+                    {player.last_name.toUpperCase()}
+                  </Typography>
+                  <Divider/>
                   <Stack
                     direction="row"
                     justifyContent="space-between"
@@ -146,8 +151,12 @@ const Home = () => {
               >
                 <CardContent>
                   <Typography variant="h6" textAlign={"center"}>
-                    {player.first_name.toUpperCase()}
+                    {player.first_name}
                   </Typography>
+                  <Typography variant="h6" textAlign={"center"}>
+                    {player.last_name.toUpperCase()}
+                  </Typography>
+                  <Divider/>
                   <Stack
                     direction="row"
                     justifyContent="space-between"

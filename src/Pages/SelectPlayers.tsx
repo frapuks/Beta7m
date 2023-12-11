@@ -109,7 +109,7 @@ const SelectPlayers = () => {
                   name="goalkeeper"
                   control={<Checkbox />}
                   value={player.id}
-                  label={player.first_name}
+                  label={`${player.first_name} ${player.last_name.toUpperCase()}`}
                 />
               )
           )}
@@ -125,7 +125,7 @@ const SelectPlayers = () => {
                   name="player"
                   control={<Checkbox />}
                   value={player.id}
-                  label={player.first_name}
+                  label={`${player.first_name} ${player.last_name.toUpperCase()}`}
                 />
               )
           )}
