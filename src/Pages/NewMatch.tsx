@@ -36,6 +36,7 @@ const SelectPlayers = () => {
   // Utils
   const navigate = useNavigate();
   const urlApi = "https://api-beta7m.fg-tech.fr/api/v1";
+  // const urlApi = "http://localhost:4009/api/v1";
 
   // Variables
   const goalkeepers: Player[] = useSelector(
@@ -53,7 +54,9 @@ const SelectPlayers = () => {
   const [disabledButton, setDisabledButton] = useState(false);
 
   // Methods
-  const handleCloseSnackbar = () => { setOpenSnackbar(false); };
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
   const handleShoot = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -68,8 +71,8 @@ const SelectPlayers = () => {
       is_Goal: isGoal,
       shooter_id: shooterId,
       goalkeeper_id: goalkeeperId,
-      shooter: players.find(player => player.id == shooterId),
-      goalkeeper: goalkeepers.find(player => player.id == goalkeeperId),
+      shooter: players.find((player) => player.id == shooterId),
+      goalkeeper: goalkeepers.find((player) => player.id == goalkeeperId),
     };
 
     if (!result || !newShoot.shooter_id || !newShoot.goalkeeper_id) return;
@@ -82,19 +85,17 @@ const SelectPlayers = () => {
     setDisabledButton(true);
     const players_victory: boolean = score >= target;
     const match: Match = { players_victory };
-    // TODO : Envoyer le Match et les tirs en BDD
-    console.log(match, shootList);
 
     const response = await fetch(`${urlApi}/matchs/list`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({match, shootList})
+      body: JSON.stringify({ match, shootList }),
     });
     if (!response.ok) {
       setDisabledButton(false);
       setOpenSnackbar(true);
       return;
-    };
+    }
 
     navigate("/");
   };
@@ -239,7 +240,12 @@ const SelectPlayers = () => {
           </Table>
         </TableContainer>
 
-        <Button variant="contained" color="error" onClick={handleEndGame} disabled={disabledButton}>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleEndGame}
+          disabled={disabledButton}
+        >
           Terminer le match
         </Button>
       </Stack>

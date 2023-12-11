@@ -20,6 +20,7 @@ const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const urlApi = "https://api-beta7m.fg-tech.fr/api/v1";
+  // const urlApi = "http://localhost:4009/api/v1";
 
   // Variables
   const players: Player[] = useSelector(
