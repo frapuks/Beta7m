@@ -77,7 +77,6 @@ const Login = () => {
               name="email"
               autoComplete="email"
               autoFocus
-              defaultValue={"admin@admin.com"}
             />
             <TextField
               label="Mot de passe"
