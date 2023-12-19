@@ -20,10 +20,10 @@ const Home = () => {
   // Utils
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const urlApi = "https://api-beta7m.fg-tech.fr/api/v1";
-  // const urlApi = "http://localhost:4009/api/v1";
+  const urlApi: string = import.meta.env.VITE_API_ROOT;
 
   // Variables
+  const accessToken = localStorage.getItem("accessToken");
   const players: Player[] = useSelector(
     (state: RootState) => state.players.players
   );
@@ -78,9 +78,9 @@ const Home = () => {
             player.is_goalkeeper &&
             !!player.goalkeeperList?.length && (
               <Card
-              key={uuidv4()}
+                key={uuidv4()}
                 sx={{ backgroundColor: "primary.main", color: "white" }}
-                >
+              >
                 <CardContent>
                   <Typography variant="h6" textAlign={"center"}>
                     {player.first_name}
@@ -88,7 +88,7 @@ const Home = () => {
                   <Typography variant="h6" textAlign={"center"}>
                     {player.last_name.toUpperCase()}
                   </Typography>
-                  <Divider/>
+                  <Divider />
                   <Stack
                     direction="row"
                     justifyContent="space-between"
@@ -156,7 +156,7 @@ const Home = () => {
                   <Typography variant="h6" textAlign={"center"}>
                     {player.last_name.toUpperCase()}
                   </Typography>
-                  <Divider/>
+                  <Divider />
                   <Stack
                     direction="row"
                     justifyContent="space-between"
@@ -203,13 +203,15 @@ const Home = () => {
         )}
       </Stack>
 
-      <Fab
-        color="secondary"
-        sx={{ position: "fixed", bottom: 16, right: 16 }}
-        onClick={handleClickFab}
-      >
-        <SportsHandball />
-      </Fab>
+      {accessToken && (
+        <Fab
+          color="secondary"
+          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          onClick={handleClickFab}
+        >
+          <SportsHandball />
+        </Fab>
+      )}
     </Container>
   );
 };

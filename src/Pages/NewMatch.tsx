@@ -35,8 +35,7 @@ enum ShootResult {
 const SelectPlayers = () => {
   // Utils
   const navigate = useNavigate();
-  // const urlApi = "https://api-beta7m.fg-tech.fr/api/v1";
-  const urlApi = "http://localhost:4009/api/v1";
+  const urlApi: string = import.meta.env.VITE_API_ROOT;
 
   // Variables
   const goalkeepers: Player[] = useSelector(
@@ -142,7 +141,7 @@ const SelectPlayers = () => {
         <Box id="playersForm" component="form" onSubmit={handleShoot}>
           <Stack direction="row" justifyContent="space-around" gap={1}>
             <RadioGroup>
-              <FormLabel>Joueurs</FormLabel>
+              <FormLabel component="legend">Joueurs</FormLabel>
               {players.map((player) => (
                 <FormControlLabel
                   key={uuidv4()}
@@ -166,7 +165,7 @@ const SelectPlayers = () => {
 
             <Stack direction="column" justifyContent="space-between" gap={1}>
               <RadioGroup>
-                <FormLabel>Gardiens</FormLabel>
+                <FormLabel component="legend">Gardiens</FormLabel>
                 {goalkeepers.map((goalkeeper) => (
                   <FormControlLabel
                     key={uuidv4()}
@@ -179,7 +178,7 @@ const SelectPlayers = () => {
                 ))}
               </RadioGroup>
               <RadioGroup>
-                <FormLabel>Résultat</FormLabel>
+                <FormLabel component="legend">Résultat</FormLabel>
                 <FormControlLabel
                   name="result"
                   control={<Radio />}
