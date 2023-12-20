@@ -33,7 +33,6 @@ const Dashboard = () => {
 
   // Variables
   const accessToken = localStorage.getItem("accessToken");
-  const refreshToken = localStorage.getItem("refreshToken");
   const Players: Player[] = useSelector(
     (state: RootState) => state.players.players
   );
@@ -53,19 +52,6 @@ const Dashboard = () => {
   };
   const handleCloseDialog = (): void => {
     setOpenDialog(false);
-  };
-
-  const handleClickLogout = async () => {
-    await fetch(`${urlApi}/signout`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `bearer ${refreshToken}`,
-      },
-    });
-
-    localStorage.clear();
-    navigate("/");
   };
 
   const handleSubmitEdit = async (
@@ -114,21 +100,18 @@ const Dashboard = () => {
 
   return (
     <Container sx={{ padding: 0 }}>
-      <Stack direction="row" justifyContent="center" sx={{ padding: 1 }}>
-        <Button variant="contained" color="error" onClick={handleClickLogout}>
-          Déconnexion
-        </Button>
-      </Stack>
-
+      <Typography component="h1" variant="h5" textAlign="center">
+        Liste des joueurs
+      </Typography>
       <List>
         <Divider />
         <ListItem secondaryAction={<Typography>Gardien / Valider</Typography>}>
-          <ListItemText primary="Prénom / Nom"/>
+          <ListItemText primary="Prénom / Nom" />
         </ListItem>
         <Divider />
         {Players.map((player) => (
           <Box
-          key={uuidv4()}
+            key={uuidv4()}
             component="form"
             onSubmit={(event) => handleSubmitEdit(event, player)}
           >
@@ -144,14 +127,17 @@ const Dashboard = () => {
                 defaultValue={player.first_name}
                 variant="standard"
                 autoComplete="off"
-                />
+              />
               <TextField
                 name="last_name"
                 defaultValue={player.last_name}
                 variant="standard"
                 autoComplete="off"
               />
-              <Switch name="is_goalkeeper" defaultChecked={player.is_goalkeeper} />
+              <Switch
+                name="is_goalkeeper"
+                defaultChecked={player.is_goalkeeper}
+              />
             </ListItem>
             <Divider />
           </Box>

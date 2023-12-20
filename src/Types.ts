@@ -6,7 +6,7 @@ export type Player = {
   matchList?: Match[];
   shooterList?: Shoot[];
   goalkeeperList?: Shoot[];
-}
+};
 
 export type Match = {
   id?: number;
@@ -24,4 +24,15 @@ export type Shoot = {
   created_at?: string;
   goalkeeper?: Player;
   shooter?: Player;
+};
+
+export type User = {
+  id?: number;
+  username: string;
+  email: string;
+  password?: string;
+  tokens?: {
+    accessToken: string;
+    refreshToken: string;
+  };
 };

@@ -1,5 +1,5 @@
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
-import { SportsHandball } from "@mui/icons-material";
+import { AccountCircle, SportsHandball } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -19,6 +19,9 @@ const Header = () => {
   const handleClickDashboard = (): void => {
     navigate("/dashboard");
   };
+  const handleClickAccount = (): void => {
+    navigate("/account");
+  };
 
   return (
     <AppBar component="header" position="static">
@@ -30,9 +33,14 @@ const Header = () => {
           Beta7m
         </Typography>
         {accessToken ? (
-          <Button color="inherit" onClick={handleClickDashboard}>
-            Dashboard
-          </Button>
+          <>
+            <Button color="inherit" onClick={handleClickDashboard}>
+              Dashboard
+            </Button>
+            <IconButton color="inherit" onClick={handleClickAccount}>
+              <AccountCircle />
+            </IconButton>
+          </>
         ) : (
           <Button color="inherit" onClick={handleClickLogin}>
             Se connecter

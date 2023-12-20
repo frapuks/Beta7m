@@ -25,6 +25,7 @@ const Login = () => {
 
   // Methods
   const handleClickShowPassword = (): void => setShowPassword((show) => !show);
+  const handleChange = (): void => setError(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -77,6 +78,8 @@ const Login = () => {
               name="email"
               autoComplete="email"
               autoFocus
+              // defaultValue="admin@admin.com"
+              onChange={handleChange}
             />
             <TextField
               label="Mot de passe"
@@ -85,6 +88,8 @@ const Login = () => {
               name="password"
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
+              // defaultValue="admin"
+              onChange={handleChange}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
